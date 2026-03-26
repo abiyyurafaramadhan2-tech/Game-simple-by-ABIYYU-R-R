@@ -9,6 +9,12 @@ const WORLD_W = 2560;
 const WORLD_H = 1920;
 
 export class GameScene extends Phaser.Scene {
+  private createMobileButtons(): void {
+  // ✅ FIX ERROR NETLIFY (method stub)
+  // Nanti kalau mau isi logic tombol mobile, taruh di sini
+
+  this.mobileButtons = this.add.container(0, 0);
+  }
   player!: Player;
   enemies: Enemy[] = [];
   joystick: VirtualJoystick | null = null;
