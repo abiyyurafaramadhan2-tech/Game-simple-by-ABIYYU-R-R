@@ -81,7 +81,8 @@ export class GameScene extends Phaser.Scene {
     this.ultRing = this.add.graphics().setDepth(50);  
 
     // ── Events ────────────────────────────────────────────────────  
-    eventBus.on("player-dead", this.onPlayerDead, this);  
+    // 🔥 FIX: bind this supaya TS cuma dapet 2 argumen
+    eventBus.on("player-dead", this.onPlayerDead.bind(this));  
 
     // ── Wave timer event ──────────────────────────────────────────  
     this.time.addEvent({  
@@ -328,7 +329,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   shutdown() {
-    eventBus.off("player-dead", this.onPlayerDead, this);
+    // 🔥 FIX: off juga bind(this)
+    eventBus.off("player-dead", this.onPlayerDead.bind(this));
     this.joystick?.destroy();
   }
-       }
+  }
