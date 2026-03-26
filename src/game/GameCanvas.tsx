@@ -9,13 +9,15 @@ export default function GameCanvas() {
     if (gameRef.current || !containerRef.current) return;
 
     const init = async () => {
-      // Load Phaser client-side only
       const Phaser = (await import("phaser")).default;
       (window as any).Phaser = Phaser;
 
-      // ✅ FIX DI SINI (doang)
-      const { default: PreloadScene } = await import("./scenes/PreloadScene");
-      const { default: GameScene }    = await import("./scenes/GameScene");
+      // ✅ FIX ANTI ERROR SEMUA KONDISI
+      const preloadMod = await import("./scenes/PreloadScene");
+      const gameMod    = await import("./scenes/GameScene");
+
+      const PreloadScene = preloadMod.default ?? preloadMod.PreloadScene;
+      const GameScene    = gameMod.default ?? gameMod.GameScene;
 
       gameRef.current = new Phaser.Game({
         type:   Phaser.AUTO,
