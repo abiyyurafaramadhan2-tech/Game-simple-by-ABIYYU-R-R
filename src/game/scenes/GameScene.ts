@@ -65,7 +65,7 @@ export class GameScene extends Phaser.Scene {
 
     this.ultRing = this.add.graphics().setDepth(50);
 
-    // ✅ FIX DI SINI
+    // ✅ FIX eventBus
     this.onPlayerDead = this.onPlayerDead.bind(this);
     eventBus.on("player-dead", this.onPlayerDead);
 
@@ -166,6 +166,63 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  // ✅ BALIKIN METHOD YANG HILANG
+  private createMobileButtons() {
+    const CH = this.scale.height;
+    const CW = this.scale.width;
+
+    const btns = [
+      { label:"DASH", color:0x3366ff },
+      { label:"ATK",  color:0xffdd00 },
+      { label:"ARR",  color:0x33ff88 },
+      { label:"ULT",  color:0xff44aa },
+    ];
+
+    const startX = CW - 180;
+    const startY = CH - 80;
+
+    const positions = [
+      { x: startX,       y: startY },
+      { x: startX + 65,  y: startY - 50 },
+      { x: startX + 120, y: startY },
+      { x: startX + 65,  y: startY - 105 },
+    ];
+
+    btns.forEach((b, i) => {
+      const g = this.add.graphics().setScrollFactor(0).setDepth(200).setAlpha(0.7);
+
+      g.fillStyle(b.color, 0.6);
+      g.fillCircle(positions[i].x, positions[i].y, 28);
+
+      g.lineStyle(2, b.color, 1);
+      g.strokeCircle(positions[i].x, positions[i].y, 28);
+
+      this.mobileButtons.push(g);
+
+      const t = this.add.text(positions[i].x, positions[i].y, b.label, {
+        fontSize: "11px",
+        fontFamily: "monospace",
+        color: "#ffffff",
+        stroke: "#000",
+        strokeThickness: 3,
+      })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(201);
+
+      this.mobileBtnLabels.push(t);
+
+      g.setInteractive(
+        new Phaser.Geom.Circle(positions[i].x, positions[i].y, 28),
+        Phaser.Geom.Circle.Contains
+      );
+
+      g.on("pointerdown", () => {
+        this.player.mobileSkill = i;
+      });
+    });
+  }
+
   update(_time: number, delta: number) {
     if (this.isDead) return;
 
@@ -176,7 +233,6 @@ export class GameScene extends Phaser.Scene {
     this.bgNear.setTilePosition(sx * 0.40, sy * 0.40);
 
     this.player.update(delta, this.joystick?.output);
-
     this.enemies.forEach(e => e.update(delta));
 
     eventBus.emit("game-state", { wave: this.wave, score: this.score });
@@ -191,7 +247,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   shutdown() {
-    // ✅ FIX DI SINI
+    // ✅ FIX eventBus off
     eventBus.off("player-dead", this.onPlayerDead);
     this.joystick?.destroy();
   }
