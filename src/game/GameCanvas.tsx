@@ -13,8 +13,9 @@ export default function GameCanvas() {
       const Phaser = (await import("phaser")).default;
       (window as any).Phaser = Phaser;
 
-      const { PreloadScene } = await import("./scenes/PreloadScene");
-      const { GameScene }    = await import("./scenes/GameScene");
+      // ✅ FIX DI SINI (doang)
+      const { default: PreloadScene } = await import("./scenes/PreloadScene");
+      const { default: GameScene }    = await import("./scenes/GameScene");
 
       gameRef.current = new Phaser.Game({
         type:   Phaser.AUTO,
