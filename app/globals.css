@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #08081a;
+  color: #e0e0ff;
+  font-family: 'Orbitron', monospace;
+}
+
+#__next { width: 100%; height: 100%; }
+
+canvas { display: block !important; }
+
+.hud-panel {
+  background: rgba(8, 8, 30, 0.82);
+  border: 1px solid rgba(100, 120, 255, 0.25);
+  backdrop-filter: blur(6px);
+  border-radius: 10px;
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.skill-ready { animation: pulse-ring 1.2s ease-in-out infinite; }
