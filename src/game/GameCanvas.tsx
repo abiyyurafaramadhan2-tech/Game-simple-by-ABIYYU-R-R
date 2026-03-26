@@ -9,29 +9,30 @@ export default function GameCanvas() {
     if (gameRef.current || !containerRef.current) return;
 
     const init = async () => {
+      // Load Phaser client-side only
       const Phaser = (await import("phaser")).default;
       (window as any).Phaser = Phaser;
 
-      // ✅ FIX ANTI ERROR SEMUA KONDISI
+      // 🔥 FIX DI SINI (named export support)
       const preloadMod = await import("./scenes/PreloadScene");
       const gameMod    = await import("./scenes/GameScene");
 
-      const PreloadScene = preloadMod.default ?? preloadMod.PreloadScene;
-      const GameScene    = gameMod.default ?? gameMod.GameScene;
+      const PreloadScene = preloadMod.PreloadScene ?? (preloadMod as any).default;
+      const GameScene    = gameMod.GameScene ?? (gameMod as any).default;
 
       gameRef.current = new Phaser.Game({
-        type:   Phaser.AUTO,
+        type: Phaser.AUTO,
         parent: containerRef.current!,
         scale: {
-          mode:       Phaser.Scale.FIT,
+          mode: Phaser.Scale.FIT,
           autoCenter: Phaser.Scale.CENTER_BOTH,
-          width:  960,
+          width: 960,
           height: 540,
         },
         backgroundColor: "#08081a",
         physics: {
           default: "arcade",
-          arcade:  { gravity: { x:0, y:0 }, debug: false },
+          arcade: { gravity: { x: 0, y: 0 }, debug: false },
         },
         scene: [PreloadScene, GameScene],
         audio: { noAudio: true },
